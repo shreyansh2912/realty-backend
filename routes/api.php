@@ -9,15 +9,19 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // })->middleware('auth:sanctum');
 
-Route::post('/register',[UserController::class,'store']);
+Route::post('/register', [UserController::class, 'store']);
 
-Route::post('/login',[UserController::class,'login']);
+Route::post('/login', [UserController::class, 'login']);
 
-Route::middleware(['session_check','role_check'])->group(function(){
+Route::middleware(['session_check'])->group(function () {
 
-    Route::post('/properties/store',[PropertyController::class,'store']);
+    Route::get('/properties', [PropertyController::class, 'index']);
 
-    Route::get('/data',function(){
-        return "Hello";
+    Route::middleware(['role_check'])->group(function () {
+        Route::post('/properties/store', [PropertyController::class, 'store']);
+        Route::get('/properties/{id}/edit', [PropertyController::class, 'edit']);
+        Route::post('/properties/{id}/update', [PropertyController::class, 'update']);
+        Route::post('/properties/{id}/delete', [PropertyController::class, 'delete']);
     });
+
 });
